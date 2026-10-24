@@ -1,0 +1,8 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+body { @apply bg-ink text-cream font-sans antialiased; }
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg bg-bronze px-5 py-3 text-sm font-semibold text-ink transition hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream; }
+  .btn-ghost { @apply inline-flex items-center justify-center gap-2 rounded-lg border border-warm/40 px-5 py-3 text-sm text-cream transition hover:border-bronze disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-bronze; }
+  .input { @apply w-full rounded-lg border border-warm/30 bg-graphite px-4 py-3 text-cream placeholder:text-warm/60 focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze; }
+  .card { @apply rounded-xl border border-warm/20 bg-graphite p-5; }
+}
