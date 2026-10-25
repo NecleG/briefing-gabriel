@@ -16,7 +16,7 @@ export async function GET(req: Request) {
   const stamp = new Date().toISOString().slice(0, 10);
   if (fmt === "json") return new NextResponse(JSON.stringify(data, null, 2), { headers: { "Content-Type": "application/json; charset=utf-8", "Content-Disposition": `attachment; filename="briefings-${stamp}.json"` } });
 
-  const cols: { h: string; get: (r: any) => any }[] = [{ h: "ID", get: (r) => r.id }, { h: "Recebido em", get: (r) => r.created_at }, { h: "Status", get: (r) => STATUS[r.status] }, { h: "Observações internas", get: (r) => r.admin_notes }];
+  const cols: { h: string; get: (r: any) => any }[] = [{ h: "ID", get: (r) => r.id }, { h: "Recebido em", get: (r) => r.created_at }, { h: "Status", get: (r) => STATUS[r.status] }, { h: "Observações internas", get: (r) => r.admin_notes }, { h: "Nome do contato", get: (r) => r.answers?.contactName }, { h: "Contato (WhatsApp ou e-mail)", get: (r) => r.answers?.contactInfo }];
   for (const s of STEPS) for (const f of s.fields) {
     if (f.type === "links") LINK_KEYS.forEach((k) => cols.push({ h: `${f.n}. ${LINK_LABELS[k]}`, get: (r) => r.answers?.links?.[k] }));
     else cols.push({ h: `${f.n}. ${f.label}`, get: (r) => (f.key === "companyName" ? r.company_name : f.key === "segment" ? r.segment : r.answers?.[f.key]) });

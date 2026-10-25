@@ -2,12 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
-import { STEPS, LINK_KEYS, LINK_LABELS, type Field } from "@/lib/questions";
+import { STEPS, LINK_KEYS, LINK_LABELS, CONTACT, type Field } from "@/lib/questions";
 import { briefingSchema } from "@/lib/schema";
 
 const KEY = "briefing-rascunho-v1";
 const blank = (): any => {
-  const d: any = { segmentOther: "", website_hp: "", links: Object.fromEntries(LINK_KEYS.map((k) => [k, ""])) };
+  const d: any = { contactName: "", contactInfo: "", segmentOther: "", website_hp: "", links: Object.fromEntries(LINK_KEYS.map((k) => [k, ""])) };
   STEPS.forEach((s) => s.fields.forEach((f) => { if (f.type === "multi") d[f.key] = []; else if (f.type !== "links") d[f.key] = ""; }));
   return d;
 };
@@ -61,10 +61,12 @@ export default function BriefingForm() {
     } finally { lock.current = false; setSending(false); }
   };
 
+  const wa = (process.env.NEXT_PUBLIC_WHATSAPP || "").replace(/\D/g, "");
   if (done) return (<main className="mx-auto max-w-xl px-5 py-24 text-center">
     <CheckCircle2 className="mx-auto h-12 w-12 text-bronze" aria-hidden />
     <h1 className="mt-6 font-serif text-4xl">Briefing recebido</h1>
-    <p className="mt-4 text-warm">Obrigado! Analisarei suas respostas e entrarei em contato em breve.</p></main>);
+    <p className="mt-4 text-warm">Obrigado! Analisarei suas respostas e retornarei {process.env.NEXT_PUBLIC_PRAZO_RETORNO || "em breve"}.</p>
+    {wa && <a className="btn mt-8" href={`https://wa.me/${wa}?text=${encodeURIComponent("Olá! Acabei de enviar o briefing da minha empresa.")}`}>Falar pelo WhatsApp</a>}</main>);
 
   const S = STEPS[step], last = step === STEPS.length - 1;
   const Err = ({ k }: { k: string }) => err[k] ? <p id={`e-${k}`} role="alert" className="mt-1 text-sm text-red-300">{err[k]}</p> : null;
@@ -104,8 +106,11 @@ export default function BriefingForm() {
     <input tabIndex={-1} autoComplete="off" aria-hidden className="absolute -left-[9999px]" value={d.website_hp} onChange={(e) => set("website_hp", e.target.value)} />
     <form onSubmit={(e) => { e.preventDefault(); last ? submit() : next(); }} noValidate className="space-y-8">
       {S.fields.map(render)}
+      {last && <fieldset className="card"><legend className="px-1 font-medium">Como posso falar com você? <span className="text-sm text-warm">(opcional)</span></legend>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">{CONTACT.map((c) => (<div key={c.key}><label htmlFor={`c-${c.key}`} className="text-sm text-warm">{c.label}</label>
+          <input id={`c-${c.key}`} className="input mt-1" maxLength={200} value={d[c.key]} onChange={(e) => set(c.key, e.target.value)} /></div>))}</div></fieldset>}
       {last && <details className="card" open><summary className="cursor-pointer font-medium">Revisar respostas</summary>
-        <dl className="mt-4 space-y-3 text-sm">{STEPS.flatMap((s) => s.fields).filter((f) => show(f)).map((f) => (<div key={f.key}><dt className="text-warm">{f.n}. {f.label}</dt><dd className="whitespace-pre-wrap">{show(f)}</dd></div>))}</dl></details>}
+        <dl className="mt-4 space-y-3 text-sm">{STEPS.flatMap((s) => s.fields).filter((f) => show(f)).map((f) => (<div key={f.key}><dt className="text-warm">{f.n}. {f.label}</dt><dd className="whitespace-pre-wrap">{show(f)}</dd></div>))}{CONTACT.filter((c) => d[c.key]).map((c) => (<div key={c.key}><dt className="text-warm">{c.label}</dt><dd>{d[c.key]}</dd></div>))}</dl></details>}
       {fail && <p role="alert" className="rounded-lg border border-red-300/40 bg-red-950/40 p-4 text-sm text-red-200">{fail}</p>}
       <div className="flex items-center justify-between gap-3 pt-2">
         {step > 0 ? <button type="button" onClick={back} className="btn-ghost"><ArrowLeft className="h-4 w-4" aria-hidden />Voltar</button> : <span />}

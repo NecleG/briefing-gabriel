@@ -7,3 +7,4 @@ body { @apply bg-ink text-cream font-sans antialiased; }
   .card { @apply rounded-xl border border-warm/20 bg-graphite p-5; }
 }
 :root { --f-serif: "Cormorant Garamond", Georgia, serif; --f-sans: Inter, system-ui, sans-serif; }
+@media print{body{background:#fff;color:#000}*{color:#000!important;border-color:#999!important}.card{background:#fff}}

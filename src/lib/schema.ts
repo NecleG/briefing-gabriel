@@ -23,6 +23,7 @@ export const briefingSchema = z.object({
   googleProfile: txt(60).optional(),
   // Etapa 6
   hasWebsite: txt(60).optional(), websitePurpose: multi, extra: txt(),
+  contactName: txt(120).optional(), contactInfo: txt(200).optional(),
   website_hp: z.string().max(0).optional(), // honeypot anti-bot
 });
 export type BriefingInput = z.infer<typeof briefingSchema>;

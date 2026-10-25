@@ -35,3 +35,7 @@ export const STEPS: { title: string; fields: Field[] }[] = [
     { n: 24, key: "websitePurpose", label: "Se criarmos ou melhorarmos um site, qual seria a principal finalidade?", type: "multi", options: ["Apresentar a empresa", "Divulgar cardápio ou serviços", "Captar contatos", "Receber pedidos", "Gerar solicitações de orçamento", "Facilitar reservas", "Divulgar eventos", "Outra finalidade", "Não preciso de site neste momento"] },
     { n: 25, key: "extra", label: "Existe alguma informação importante que não perguntamos e que você gostaria de compartilhar?", type: "long" } ] },
 ];
+export const CONTACT = [
+  { key: "contactName", label: "Seu nome" },
+  { key: "contactInfo", label: "WhatsApp ou e-mail para contato" },
+];
